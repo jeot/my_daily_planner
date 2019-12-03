@@ -10,7 +10,17 @@ class DayView extends Component {
         return (
             <div className="card m-2">
                 <div class="card-body">
-                    View of {this.props.date.toDateString()}
+                    <h5 class="card-title">
+                        View of {this.props.date.toDateString()}
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                    <p class="card-text">
+                        Some quick example text to build on the card title and
+                        make up the bulk of the card's content.
+                    </p>
+                    <a href="google.com" class="card-link">
+                        Card link
+                    </a>
                 </div>
             </div>
         );
