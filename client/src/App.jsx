@@ -4,6 +4,7 @@ import DayView from "./DayView";
 import DayNavigator from "./DayNavigator";
 import TodayInformation from "./TodayInformation";
 
+const API_URL = "http://localhost:5000/api";
 class App extends Component {
     state = { date: new Date(), data: null };
     constructor(props) {
@@ -17,10 +18,16 @@ class App extends Component {
     }
 
     callApi = async () => {
-        fetch("http://localhost:5000/api")
-            .then(res => res.text())
-            .then(res => this.setState({ data: res }))
-            .catch(err => err);
+        const response = await fetch(API_URL);
+        // if it is a json response:
+        const myJson = await response.json();
+        console.log("myJson:", myJson);
+        const jsonText = JSON.stringify(myJson);
+        console.log("jsonText:", jsonText);
+
+        // if it is a text response:
+        // const myText = await response.text();
+        // console.log("myText:", myText);
     };
 
     onDayShift(shift) {

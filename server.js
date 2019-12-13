@@ -10,8 +10,11 @@ app.get("/", function(req, res) {
 });
 
 app.get("/api", function(req, res) {
-    console.log("some request received:", req);
-    res.send("api is working good!");
+    console.log("some api request received. sending json object back.");
+    // send a json:
+    res.send({ a: "hello", b: "goodbye" });
+    // or send a text:
+    //res.send("api is working.");
 });
 
 app.listen(port, function() {
