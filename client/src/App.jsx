@@ -4,7 +4,7 @@ import DayView from "./DayView";
 import DayNavigator from "./DayNavigator";
 import TodayInformation from "./TodayInformation";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "/api";
 class App extends Component {
     state = { date: new Date(), data: null };
     constructor(props) {
@@ -18,16 +18,23 @@ class App extends Component {
     }
 
     callApi = async () => {
-        const response = await fetch(API_URL);
-        // if it is a json response:
-        const myJson = await response.json();
-        console.log("myJson:", myJson);
-        const jsonText = JSON.stringify(myJson);
-        console.log("jsonText:", jsonText);
-
-        // if it is a text response:
-        // const myText = await response.text();
-        // console.log("myText:", myText);
+        let resText = "";
+        let response = null;
+        try {
+            response = await fetch(API_URL);
+            if (response.status !== 200) {
+                console.log("server error fetching from api!");
+                return;
+            }
+            console.log("response:", response);
+            resText = await response.text(); // Parse it as text
+            const data = JSON.parse(resText); // Try to parse it as json
+            // Do your JSON handling here
+            console.log("json data:", data);
+        } catch (err) {
+            // This probably means your response is text, do you text handling here
+            console.log("it is a text:", resText);
+        }
     };
 
     onDayShift(shift) {
