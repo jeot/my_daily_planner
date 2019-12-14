@@ -15,17 +15,31 @@ class App extends Component {
         console.log("calling backend api...");
         // fetch data from backend
         this.callApi();
+        this.callApiId(5);
     }
+
+    callApiId = async id => {
+        let resText = "";
+        let response = null;
+        try {
+            const url = "/api_id?query_id=" + id;
+            response = await fetch(url);
+            console.log("response:", response);
+            resText = await response.text(); // Parse it as text
+            const data = JSON.parse(resText); // Try to parse it as json
+            // Do your JSON handling here
+            console.log("json data:", data);
+        } catch (err) {
+            // This probably means your response is text, do you text handling here
+            console.log("it is a text:", resText);
+        }
+    };
 
     callApi = async () => {
         let resText = "";
         let response = null;
         try {
             response = await fetch(API_URL);
-            if (response.status !== 200) {
-                console.log("server error fetching from api!");
-                return;
-            }
             console.log("response:", response);
             resText = await response.text(); // Parse it as text
             const data = JSON.parse(resText); // Try to parse it as json

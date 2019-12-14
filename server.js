@@ -10,11 +10,17 @@ app.get("/", function(req, res) {
 });
 
 app.get("/api", function(req, res) {
-    console.log("some api request received. sending json object back.");
+    console.log("api called.");
     // send a json:
     res.send({ a: "hello", b: "goodbye" });
     // or send a text:
     //res.send("api is working.");
+});
+
+app.get("/api_id", function(req, res) {
+    console.log("api_id called.");
+    const id = req.query.query_id;
+    res.send({ id: id, next_id: id });
 });
 
 app.listen(port, function() {
