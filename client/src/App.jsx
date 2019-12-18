@@ -23,7 +23,8 @@ const App = () => {
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/profile" component={Profile} />
-                    <Route component={NotFound} />
+                    <Route component={Home} />
+                    {/* <Route component={NotFound} /> */}
                 </Switch>
             </div>
         </Router>
