@@ -13,36 +13,30 @@ app.use(express.json());
 let users = [];
 
 app.get("/", function(req, res) {
-	// this don't work yet!
-	res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+    // this don't work yet!
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
 app.get("/users", function(req, res) {
-	res.json(users);
+    res.json(users);
 });
 
 app.post("/users", function(req, res) {
-	const new_user = { name: req.body.name, password: req.body.password };
-	users.push(new_user);
-	res.status(201).send();
+    const new_user = { name: req.body.name, password: req.body.password };
+    users.push(new_user);
+    res.status(201).send();
 });
 
 app.get("/api", function(req, res) {
-	console.log("api called.");
-	// send a json:
-	res.send({ a: "hello", b: "goodbye" });
-	//res.json({ a: "A", b: "B"});
+    console.log("api called.");
+    // send a json:
+    res.send({ a: "hello", b: "goodbye" });
+    //res.json({ a: "A", b: "B"});
 
-	// or send a text:
-	//res.send("api is working.");
-});
-
-app.get("/api_id", function(req, res) {
-	console.log("api_id called.");
-	const id = req.query.query_id;
-	res.send({ id: id, next_id: id });
+    // or send a text:
+    //res.send("api is working.");
 });
 
 app.listen(port, function() {
-	console.log("example app listening on port", port);
+    console.log("example app listening on port", port);
 });
