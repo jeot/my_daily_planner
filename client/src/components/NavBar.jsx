@@ -4,22 +4,16 @@ import { useAuth0 } from "./../react-auth0-spa";
 
 const NavBar = () => {
     const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
-    console.log("user:", user);
+
     return (
         <nav className="navbar navbar-light bg-light">
             <Link to="/" className="navbar-brand">
-                <img
-                    src="http://freevectorlogo.net/wp-content/uploads/2011/04/starbucks-logo-vector-200x200.png"
-                    width="35"
-                    height="35"
-                    alt=""
-                    className="d-inline-block align-top"
-                />
-                My Daily Planner
+                {!isAuthenticated && "SHK's Website!"}
+                {isAuthenticated && "My Daily Planner App"}
             </Link>
             {!isAuthenticated && (
                 <button
-                    className="btn btn-outline-success m-2"
+                    className="btn btn-sm btn-outline-success px-2"
                     onClick={() => loginWithRedirect({})}
                 >
                     Log in

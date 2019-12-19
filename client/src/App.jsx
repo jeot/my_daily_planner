@@ -1,18 +1,34 @@
 import React, { Component } from "react";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
+
+import BounceLoader from "react-spinners/BounceLoader";
+
+import { useAuth0, Auth0Context } from "./react-auth0-spa";
 import PrivateRoute from "./components/PrivateRoute";
 import NavBar from "./components/NavBar";
-import Home from "./pages/Home";
+import MyDailyPlannerApp from "./pages/MyDailyPlannerApp";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import History from "./utils/history";
-import { useAuth0 } from "./react-auth0-spa";
+import WelcomePage from "./pages/WelcomePage";
 
 const App = () => {
-    const { loading } = useAuth0();
+    const { user, isAuthenticated, loading } = useAuth0();
+    const spinner = (
+        <div
+            style={{
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                transform: "translate(-50%, -50%)"
+            }}
+        >
+            <BounceLoader size={50} color={"#123abc"} loading={loading} />
+        </div>
+    );
 
     if (loading) {
-        return <div>Loading...</div>;
+        return spinner;
     }
     return (
         <Router history={History}>
@@ -20,7 +36,12 @@ const App = () => {
                 <NavBar />
             </header>
             <Switch>
-                <Route exact path="/" component={Home} />
+                {!isAuthenticated && (
+                    <Route exact path="/" component={WelcomePage} />
+                )}
+                {isAuthenticated && (
+                    <Route exact path="/" component={MyDailyPlannerApp} />
+                )}
                 <PrivateRoute exact path="/profile" component={Profile} />
                 <Route component={NotFound} />
             </Switch>

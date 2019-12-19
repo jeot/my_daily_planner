@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import DayView from "./../components/DayView";
-import DayNavigator from "./../components/DayNavigator";
-import TodayInformation from "./../components/TodayInformation";
+import DayView from "../components/DayView";
+import DayNavigator from "../components/DayNavigator";
+import TodayInformation from "../components/TodayInformation";
 
 const API_URL = "/api";
-class Home extends Component {
+class MyDailyPlannerApp extends Component {
     state = { date: new Date() };
     constructor(props) {
         super(props);
@@ -54,4 +54,4 @@ class Home extends Component {
     }
 }
 
-export default Home;
+export default MyDailyPlannerApp;
