@@ -7,7 +7,7 @@ const NavBar = () => {
     console.log("user:", user);
     return (
         <nav className="navbar navbar-light bg-light">
-            <a className="navbar-brand" href="/">
+            <Link to="/" className="navbar-brand">
                 <img
                     src="http://freevectorlogo.net/wp-content/uploads/2011/04/starbucks-logo-vector-200x200.png"
                     width="35"
@@ -16,7 +16,7 @@ const NavBar = () => {
                     className="d-inline-block align-top"
                 />
                 My Daily Planner
-            </a>
+            </Link>
             {!isAuthenticated && (
                 <button
                     className="btn btn-outline-success m-2"
@@ -28,7 +28,7 @@ const NavBar = () => {
 
             {isAuthenticated && (
                 <div>
-                    <a href="profile">
+                    <Link to="profile">
                         <span className="px-2">{user.nickname}</span>
                         <img
                             src={user.picture}
@@ -36,7 +36,7 @@ const NavBar = () => {
                             className="nav-user-profile rounded-circle px-2"
                             width="50"
                         />
-                    </a>
+                    </Link>
                     <button
                         className="btn btn-sm btn-outline-secondary px-2"
                         onClick={() => logout()}
