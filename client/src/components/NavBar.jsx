@@ -9,7 +9,7 @@ const NavBar = () => {
         <nav className="navbar navbar-light bg-light">
             <a class="navbar-brand" href="/">
                 <img
-                    src="https://cdn2.iconfinder.com/data/icons/ecology-24/128/16-512.png"
+                    src="http://freevectorlogo.net/wp-content/uploads/2011/04/starbucks-logo-vector-200x200.png"
                     width="35"
                     height="35"
                     alt=""
@@ -34,7 +34,7 @@ const NavBar = () => {
                             src={user.picture}
                             alt="Profile"
                             className="nav-user-profile rounded-circle px-2"
-                            width="40"
+                            width="50"
                         />
                     </a>
                     <button

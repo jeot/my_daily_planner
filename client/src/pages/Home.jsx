@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import NavBar from "./../components/NavBar";
 import DayView from "./../components/DayView";
 import DayNavigator from "./../components/DayNavigator";
 import TodayInformation from "./../components/TodayInformation";
@@ -46,13 +45,10 @@ class Home extends Component {
 
     render() {
         return (
-            <div>
-                <NavBar />
-                <div className="container">
-                    <TodayInformation date={new Date()} />
-                    <DayNavigator onDayShift={this.onDayShift} />
-                    <DayView date={this.state.date} />
-                </div>
+            <div className="container">
+                <TodayInformation date={new Date()} />
+                <DayNavigator onDayShift={this.onDayShift} />
+                <DayView date={this.state.date} />
             </div>
         );
     }
