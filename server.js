@@ -7,13 +7,16 @@ dotenv.config();
 console.log(`Your port is ${process.env.PORT}`);
 const port = process.env.PORT || 5000;
 
+let users = [];
+
 app.use(cors());
 app.use(express.json());
-
-let users = [];
+app.use(express.static(path.join(__dirname, "client", "build")));
+console.log(path.join(__dirname, "client", "build"));
 
 app.get("/", function(req, res) {
     // this don't work yet!
+    console.log("sending index.html file...");
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 

@@ -7,7 +7,7 @@ const NavBar = () => {
     console.log("user:", user);
     return (
         <nav className="navbar navbar-light bg-light">
-            <a class="navbar-brand" href="/">
+            <a className="navbar-brand" href="/">
                 <img
                     src="http://freevectorlogo.net/wp-content/uploads/2011/04/starbucks-logo-vector-200x200.png"
                     width="35"

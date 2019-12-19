@@ -12,7 +12,7 @@
         "react-router-dom": "^5.1.2",
         "react-scripts": "3.2.0"
     },
-    "homepage": "https://jeot.github.io/my_daily_planner/",
+    "homepage": "http://shamimkeshani.ir",
     "scripts": {
         "predeploy": "npm run build",
         "deploy": "gh-pages -d build",
