@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import DayView from "../components/DayView";
 import DayNavigator from "../components/DayNavigator";
-import TodayInformation from "../components/TodayInformation";
 
 const API_URL = "/api";
 class MyDailyPlannerApp extends Component {
@@ -43,12 +42,19 @@ class MyDailyPlannerApp extends Component {
 		console.log(this.state);
 	}
 
+	TEST_TODOS = [
+		{ isImportant: true, title: "important 123" },
+		{ isImportant: false, title: "simple 123" },
+		{ isImportant: false, title: "dsfsd" },
+		{ isImportant: true, title: "buy milk" },
+		{ isImportant: false, title: "kiss a frog!" }
+	];
+
 	render() {
 		return (
 			<div className="container">
-				<TodayInformation date={new Date()} />
 				<DayNavigator onDayShift={this.onDayShift} />
-				<DayView date={this.state.date} />
+				<DayView date={this.state.date} todos={this.TEST_TODOS} />
 			</div>
 		);
 	}
