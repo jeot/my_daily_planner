@@ -20,8 +20,9 @@ class MyDailyPlannerApp extends Component {
 		this.getTodos();
 	}
 
-	getTodos = async () => {
+	getTodos = async wantingDate => {
 		try {
+			this.setState({ fetching: true });
 			const rawResponse = await fetch(POST_TODOS_URL, {
 				method: "POST",
 				headers: {
@@ -30,7 +31,7 @@ class MyDailyPlannerApp extends Component {
 				},
 				body: JSON.stringify({
 					user: this.props.user,
-					date: this.state.date
+					date: wantingDate
 				})
 			});
 			console.log(rawResponse);
@@ -63,16 +64,14 @@ class MyDailyPlannerApp extends Component {
 		let currentDate = this.state.date;
 		if (shift === 0) currentDate = new Date();
 		else currentDate.setDate(currentDate.getDate() + shift);
-		this.setState({
-			date: currentDate
-		});
-		console.log(this.state);
+		this.getTodos(currentDate);
 	}
 
 	render() {
 		if (this.state.fetching)
 			return (
 				<div className="container">
+					<DayNavigator onDayShift={this.onDayShift} />
 					<p className="text-center text-wrap text-secondary">
 						Loading...
 					</p>

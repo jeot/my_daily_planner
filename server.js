@@ -47,7 +47,7 @@ TEST_TODOS_ARRAY = [
 
 app.post("/todos", function(req, res) {
 	// check...
-	const checkOK = false;
+	const checkOK = true;
 	if (checkOK) {
 		console.log("post /todos");
 		const user = req.body.user;
