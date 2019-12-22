@@ -39,7 +39,17 @@ const App = () => {
 					<Route exact path="/" component={WelcomePage} />
 				)}
 				{isAuthenticated && (
-					<Route exact path="/" component={MyDailyPlannerApp} />
+					<Route
+						exact
+						path="/"
+						render={props => (
+							<MyDailyPlannerApp
+								{...props}
+								user={user}
+								isAuthenticated={isAuthenticated}
+							/>
+						)}
+					/>
 				)}
 				<PrivateRoute exact path="/profile" component={Profile} />
 				<Route component={NotFound} />

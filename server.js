@@ -16,7 +16,9 @@ app.use(
 
 app.get("/", function(req, res) {
 	console.log("sending index.html file...");
-	res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+	if (process.env.NODE_ENV === "development")
+		res.sendFile(path.join(__dirname, "client", "public", "index.html"));
+	else res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
 app.get("/counter", function(req, res) {
@@ -34,14 +36,28 @@ app.post("/users", function(req, res) {
 	res.status(201).send();
 });
 
-app.get("/api", function(req, res) {
-	console.log("api called.");
-	// send a json:
-	res.send({ a: "hello", b: "goodbye" });
-	//res.json({ a: "A", b: "B"});
+// return this on get /todos
+TEST_TODOS_ARRAY = [
+	{ id: 0, isDone: false, isImportant: true, title: "important 123" },
+	{ id: 1, isDone: true, isImportant: false, title: "simple 123" },
+	{ id: 2, isDone: false, isImportant: false, title: "dsfsd" },
+	{ id: 3, isDone: true, isImportant: true, title: "buy milk" },
+	{ id: 4, isDone: false, isImportant: false, title: "kiss a frog!" }
+];
 
-	// or send a text:
-	//res.send("api is working.");
+app.post("/todos", function(req, res) {
+	// check...
+	const checkOK = false;
+	if (checkOK) {
+		console.log("post /todos");
+		const user = req.body.user;
+		const date = req.body.date;
+		console.log("user:", user);
+		console.log("date:", date);
+		setTimeout(() => res.json(TEST_TODOS_ARRAY), 1000); // delay just for visual
+	} else {
+		setTimeout(() => res.send("bad!"), 1000);
+	}
 });
 
 /////////////
