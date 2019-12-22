@@ -54,9 +54,9 @@ app.post("/todos", function(req, res) {
 		const date = req.body.date;
 		console.log("user:", user);
 		console.log("date:", date);
-		setTimeout(() => res.json(TEST_TODOS_ARRAY), 1000); // delay just for visual
+		setTimeout(() => res.json(TEST_TODOS_ARRAY), 100); // delay just for visual
 	} else {
-		setTimeout(() => res.send("bad!"), 1000);
+		setTimeout(() => res.send("bad!"), 100);
 	}
 });
 
