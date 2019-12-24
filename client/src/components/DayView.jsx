@@ -16,15 +16,15 @@ class DayView extends Component {
 					</h5>
 					<TodoList
 						todos={this.props.todos.filter(
-							todo => todo.isImportant
+							todo => todo.type === "important"
 						)}
-						isImportant={true}
+						type="important"
 					/>
 					<TodoList
 						todos={this.props.todos.filter(
-							todo => !todo.isImportant
+							todo => todo.type === "simple"
 						)}
-						isImportant={false}
+						type="simple"
 					/>
 				</div>
 			</div>
