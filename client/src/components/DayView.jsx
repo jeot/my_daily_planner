@@ -19,12 +19,14 @@ class DayView extends Component {
 							todo => todo.type === "important"
 						)}
 						type="important"
+						onAddNewTodoClick={this.props.onAddNewTodoClick}
 					/>
 					<TodoList
 						todos={this.props.todos.filter(
 							todo => todo.type === "simple"
 						)}
 						type="simple"
+						onAddNewTodoClick={this.props.onAddNewTodoClick}
 					/>
 				</div>
 			</div>

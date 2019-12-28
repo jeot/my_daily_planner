@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import DayView from "../components/DayView";
 import DayNavigator from "../components/DayNavigator";
+import TodoDialog from "../components/TodoDialog";
 
 const POST_TODOS_URL = "/todos";
 class MyDailyPlannerApp extends Component {
@@ -10,7 +11,9 @@ class MyDailyPlannerApp extends Component {
 			date: new Date(),
 			todos: [],
 			fetching: true,
-			result: false
+			result: false,
+			todoDialogOpen: false,
+			todoDialogOpenType: "simple"
 		};
 		this.onDayShift = this.onDayShift.bind(this);
 	}
@@ -67,30 +70,47 @@ class MyDailyPlannerApp extends Component {
 		this.getTodos(currentDate);
 	}
 
+	handleTodoDialogOpen = type => {
+		this.setState({ todoDialogOpen: true, todoDialogOpenType: type });
+	};
+
+	handleTodoDialogClose = newTodo => {
+		this.setState({ todoDialogOpen: false });
+		// handle the newTodo...
+		console.log("handling new todo", newTodo);
+	};
+
+	handleAddNewTodoClick = type => {
+		this.handleTodoDialogOpen(type);
+	};
+
 	render() {
-		if (this.state.fetching)
-			return (
-				<div className="container">
-					<DayNavigator onDayShift={this.onDayShift} />
-					<p className="text-center text-wrap text-secondary">
-						Loading...
-					</p>
-				</div>
-			);
-		if (this.state.result)
-			return (
-				<div className="container">
-					<DayNavigator onDayShift={this.onDayShift} />
-					<DayView date={this.state.date} todos={this.state.todos} />
-				</div>
-			);
 		return (
 			<div className="container">
 				<DayNavigator onDayShift={this.onDayShift} />
-				<p className="text-center text-wrap text-danger">
-					Something went wrong while getting the data from server!
-					Sorry!
-				</p>
+				{this.state.fetching && (
+					<p className="text-center text-wrap text-secondary">
+						Loading...
+					</p>
+				)}
+				{!this.state.fetching && this.state.result && (
+					<DayView
+						date={this.state.date}
+						todos={this.state.todos}
+						onAddNewTodoClick={this.handleAddNewTodoClick}
+					/>
+				)}
+				{!this.state.fetching && !this.state.result && (
+					<p className="text-center text-wrap text-danger">
+						Something went wrong while getting the data from server!
+						Sorry!
+					</p>
+				)}
+				<TodoDialog
+					onClose={this.handleTodoDialogClose}
+					open={this.state.todoDialogOpen}
+					type={this.state.todoDialogOpenType}
+				/>
 			</div>
 		);
 	}

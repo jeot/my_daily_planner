@@ -3,7 +3,13 @@ import Todo from "./Todo";
 import Button from "@material-ui/core/Button";
 
 class TodoList extends Component {
-	state = {};
+	constructor(props) {
+		super(props);
+	}
+	handleOnClick = () => {
+		this.props.onAddNewTodoClick(this.props.type);
+	};
+
 	render() {
 		return (
 			<div className="card m-2" style={{ width: "18rem" }}>
@@ -11,7 +17,7 @@ class TodoList extends Component {
 					{this.props.type === "important" && (
 						<h6 className="card-title">Important Todos:</h6>
 					)}
-					{!this.props.type === "simple" && (
+					{this.props.type === "simple" && (
 						<h6 className="card-title">Simple Todos:</h6>
 					)}
 
@@ -19,9 +25,10 @@ class TodoList extends Component {
 						<Todo key={t.id} todo={t} />
 					))}
 					<Button
-						variant="outlined"
+						variant="contained"
 						color="primary"
-						onClick={() => console.log("button clicked!")}
+						disableElevation
+						onClick={this.handleOnClick}
 					>
 						Add New Todo
 					</Button>
