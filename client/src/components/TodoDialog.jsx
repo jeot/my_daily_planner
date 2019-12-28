@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -10,18 +10,29 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 const TodoDialog = props => {
 	const { onClose, open, type } = props;
 
-	const handleDone = () => {
-		// check the inputs...
-		// ...
-		let newTodo = {
-			title: "hello world",
-			description: "desc...",
-			duration: 3333
-		};
-		let check = true;
+	const [newTodoTitle, setNewTodoTitle] = useState("");
+	const [newTodoDescription, setNewTodoDescription] = useState("");
+	const [newTodoDuration, setNewTodoDuration] = useState(3600);
+	const [newTodoType, setNewTodoType] = useState(type);
 
-		if (check) onClose(newTodo);
-		else {
+	const handleOnChangeTitle = event => {
+		setNewTodoTitle(event.target.value);
+	};
+	const handleOnChangeDescription = event => {
+		setNewTodoDescription(event.target.value);
+	};
+
+	const handleDone = () => {
+		let newTodo = {
+			title: newTodoTitle,
+			description: newTodoDescription,
+			duration: newTodoDuration,
+			type: type
+		};
+		// check
+		if (newTodoTitle !== "") {
+			onClose(newTodo);
+		} else {
 			// show the error...
 		}
 	};
@@ -54,6 +65,7 @@ const TodoDialog = props => {
 					variant="outlined"
 					fullWidth
 					margin="normal"
+					onChange={handleOnChangeTitle}
 				/>
 				<TextField
 					id="outlined-multiline-static"
@@ -64,6 +76,7 @@ const TodoDialog = props => {
 					variant="outlined"
 					fullWidth
 					margin="normal"
+					onChange={handleOnChangeDescription}
 				/>
 			</DialogContent>
 			<DialogActions>

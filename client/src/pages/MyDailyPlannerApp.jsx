@@ -71,7 +71,8 @@ class MyDailyPlannerApp extends Component {
 	}
 
 	handleTodoDialogOpen = type => {
-		this.setState({ todoDialogOpen: true, todoDialogOpenType: type });
+		this.setState({ todoDialogOpenType: type });
+		this.setState({ todoDialogOpen: true });
 	};
 
 	handleTodoDialogClose = newTodo => {

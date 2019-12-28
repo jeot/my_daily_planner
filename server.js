@@ -8,13 +8,18 @@ dotenv.config();
 
 var mysql = require("mysql");
 var connection = mysql.createConnection({
-	host: "localhost",
-	user: "foo",
-	password: "bar",
-	database: "my_db"
+	host: process.env.MYSQL_CONNECTION_HOST,
+	user: process.env.MYSQL_CONNECTION_USER,
+	password: process.env.MYSQL_CONNECTION_PASS,
+	database: process.env.MYSQL_CONNECTION_DB
 });
 connection.connect(err => {
-	console.log("connection call back, err:", err);
+	if (err !== null) {
+		console.log("connection call back, err:", err);
+		console.log("ERROR! Sql connection error!");
+	} else {
+		console.log("connection to db successful.");
+	}
 });
 
 let users = [{ name: "shamim" }];
@@ -47,15 +52,6 @@ app.post("/users", function(req, res) {
 	users.push(new_user);
 	res.status(201).send();
 });
-
-// return this on get /todos
-TEST_TODOS_ARRAY = [
-	{ id: 0, isDone: false, isImportant: true, title: "important 123" },
-	{ id: 1, isDone: true, isImportant: false, title: "simple 123" },
-	{ id: 2, isDone: false, isImportant: false, title: "dsfsd" },
-	{ id: 3, isDone: true, isImportant: true, title: "buy milk" },
-	{ id: 4, isDone: false, isImportant: false, title: "kiss a frog!" }
-];
 
 app.post("/todos", function(req, res) {
 	// check...
@@ -94,7 +90,7 @@ app.post("/todos", function(req, res) {
 	}
 });
 
-/////////////
+///////////
 var http = require("http");
 var port = process.env.PORT || 3000;
 console.log(`Your port is ${process.env.PORT}`);
