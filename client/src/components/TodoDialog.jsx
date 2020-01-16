@@ -8,12 +8,13 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 const TodoDialog = props => {
-	const { onClose, open, type } = props;
+	const { onClose, open, type, date } = props;
 
 	const [newTodoTitle, setNewTodoTitle] = useState("");
 	const [newTodoDescription, setNewTodoDescription] = useState("");
 	const [newTodoDuration, setNewTodoDuration] = useState(3600);
 	const [newTodoType, setNewTodoType] = useState(type);
+	const [newTodoDate, setNewTodoDate] = useState(date);
 
 	const handleOnChangeTitle = event => {
 		setNewTodoTitle(event.target.value);
@@ -24,9 +25,14 @@ const TodoDialog = props => {
 
 	const handleDone = () => {
 		let newTodo = {
+			id: null,
+			user_id: null,
+			datetime: date,
+			duration: newTodoDuration,
+			time_valid: null,
 			title: newTodoTitle,
 			description: newTodoDescription,
-			duration: newTodoDuration,
+			status: "do",
 			type: type
 		};
 		// check
@@ -56,7 +62,13 @@ const TodoDialog = props => {
 		>
 			<DialogTitle id="simple-dialog-title">{dialogTitle}</DialogTitle>
 			<DialogContent>
-				<DialogContentText style={{ margin: 8 }}></DialogContentText>
+				<DialogContentText style={{ margin: 8 }}>
+					{date
+						.toString()
+						.split(" ")
+						.slice(0, 3)
+						.join(" ")}
+				</DialogContentText>
 				<TextField
 					autoFocus
 					id="standard-basic"

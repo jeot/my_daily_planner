@@ -4,6 +4,7 @@ import DayNavigator from "../components/DayNavigator";
 import TodoDialog from "../components/TodoDialog";
 
 const POST_TODOS_URL = "/todos";
+const POST_NEW_TODO_URL = "/new_todo";
 class MyDailyPlannerApp extends Component {
 	constructor(props) {
 		super(props);
@@ -20,7 +21,7 @@ class MyDailyPlannerApp extends Component {
 
 	componentDidMount() {
 		console.log("calling backend get_todos api...");
-		this.getTodos();
+		this.getTodos(this.state.date);
 	}
 
 	getTodos = async wantingDate => {
@@ -63,6 +64,45 @@ class MyDailyPlannerApp extends Component {
 		}
 	};
 
+	addNewTodo = async newTodo => {
+		try {
+			//this.setState({ process_new_todo: true });
+			const rawResponse = await fetch(POST_NEW_TODO_URL, {
+				method: "POST",
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					user: this.props.user,
+					date: newTodo.date,
+					todo: newTodo
+				})
+			});
+			console.log(rawResponse);
+			if (!rawResponse.ok) {
+				throw new Error("Network response was not ok.");
+			}
+			if (rawResponse.status !== 200) {
+				throw new Error("response status was not 200.");
+			}
+			const content = await rawResponse.json();
+			console.log("content", content);
+			this.setState({
+				result: true
+			});
+			this.getTodos(this.state.date);
+		} catch (error) {
+			console.log(
+				"There has been a problem with your fetch operation: ",
+				error.message
+			);
+			this.setState({
+				result: false
+			});
+		}
+	};
+
 	onDayShift(shift) {
 		let currentDate = this.state.date;
 		if (shift === 0) currentDate = new Date();
@@ -79,6 +119,7 @@ class MyDailyPlannerApp extends Component {
 		this.setState({ todoDialogOpen: false });
 		// handle the newTodo...
 		console.log("handling new todo", newTodo);
+		this.addNewTodo(newTodo);
 	};
 
 	handleAddNewTodoClick = type => {
@@ -111,6 +152,7 @@ class MyDailyPlannerApp extends Component {
 					onClose={this.handleTodoDialogClose}
 					open={this.state.todoDialogOpen}
 					type={this.state.todoDialogOpenType}
+					date={this.state.date}
 				/>
 			</div>
 		);

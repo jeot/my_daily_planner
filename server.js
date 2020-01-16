@@ -14,14 +14,18 @@ var connection = mysql.createConnection({
 	database: process.env.MYSQL_CONNECTION_DB
 });
 connection.connect(err => {
-	if (err !== null) {
-		console.log("connection call back, err:", err);
-		console.log("ERROR! Sql connection error!");
-	} else {
-		console.log("connection to db successful.");
+	if (err) {
+		console.error("db error connecting: " + err.stack);
+		return;
 	}
+	console.log("db connected as id " + connection.threadId);
 });
 
+Date.prototype.toMysqlFormat = function() {
+	return this.toISOString()
+		.slice(0, 19)
+		.replace("T", " ");
+};
 let users = [{ name: "shamim" }];
 let counter = 0;
 
@@ -32,6 +36,8 @@ app.use(
 );
 
 app.get("/", function(req, res) {
+	console.log("---------------");
+	console.log("get /");
 	console.log("sending index.html file...");
 	if (process.env.NODE_ENV === "development")
 		res.sendFile(path.join(__dirname, "client", "public", "index.html"));
@@ -39,15 +45,21 @@ app.get("/", function(req, res) {
 });
 
 app.get("/counter", function(req, res) {
+	console.log("---------------");
+	console.log("get /counter");
 	counter++;
 	res.json({ counter: counter });
 });
 
 app.get("/users", function(req, res) {
+	console.log("---------------");
+	console.log("get /users");
 	res.json(users);
 });
 
 app.post("/users", function(req, res) {
+	console.log("---------------");
+	console.log("post /users");
 	const new_user = { name: req.body.name, password: req.body.password };
 	users.push(new_user);
 	res.status(201).send();
@@ -57,36 +69,124 @@ app.post("/todos", function(req, res) {
 	// check...
 	const checkOK = true;
 	if (checkOK) {
+		console.log("---------------");
 		console.log("post /todos");
 		const user = req.body.user;
 		const email = req.body.user.email;
 		const date = req.body.date;
 		//console.log("user:", user);
+		//console.log("email:", email);
 		//console.log("date:", date);
 		// get from databasae
-
-		const email_quary =
-			'SELECT my_db.users.id FROM my_db.users WHERE my_db.users.email = "' +
-			email +
-			'"';
-		const query =
-			"SELECT * FROM my_db.todo WHERE my_db.todo.user_id = (" +
-			email_quary +
-			");";
-
-		connection.query(query, function(err, rows, fields) {
-			if (err) {
-				console.log(err);
-				res.status(507).send("Something bad happend!");
+		//var sql = mysql.format(
+		//	"SELECT my_db.users.id FROM my_db.users WHERE my_db.users.email = ?",
+		//	[email]
+		//);
+		//console.log(sql);
+		connection.query(
+			"SELECT my_db.users.id FROM my_db.users WHERE my_db.users.email = ?",
+			[email],
+			function(error, results, fields) {
+				if (error) {
+					console.log(
+						"db query error while retriving user_id from email"
+					);
+					return;
+				}
+				console.log("query succeed...");
+				console.log("result:", results);
+				if (results.length != 1) {
+					console.log("no such email exists in db!");
+					res.status(404).send("no such email exists in db!");
+					return;
+				}
+				id = results[0].id;
+				console.log(id);
+				connection.query(
+					"SELECT * FROM my_db.todo WHERE my_db.todo.user_id = ?",
+					[id],
+					function(error, results, fields) {
+						if (error) {
+							console.log("db query error: select all todos");
+							res.status(507).send("db query error!");
+							return;
+						} else {
+							console.log(
+								"send back the todo list, count:",
+								results.length
+							);
+							res.json(results);
+						}
+					}
+				);
 			}
-			//throw err;
-			else {
-				console.log("The todos rows: ", rows);
-				setTimeout(() => res.json(rows), 100); // delay just for visual
-			}
-		});
+		);
 	} else {
-		setTimeout(() => res.send("bad!"), 100);
+		setTimeout(() => res.send("ERROR: authentication!"), 10);
+	}
+});
+
+app.post("/new_todo", function(req, res) {
+	// check...
+	const checkOK = true;
+	if (checkOK) {
+		console.log("---------------");
+		console.log("post /new_todos");
+
+		const user = req.body.user;
+		const email = req.body.user.email;
+		const todo = req.body.todo;
+		const datetime = new Date(todo.datetime);
+		console.log("user:", user);
+		console.log("email:", email);
+		console.log("date:", datetime);
+		console.log("date(formated):", datetime.toMysqlFormat());
+		console.log("todo:", todo);
+		connection.query(
+			"SELECT my_db.users.id FROM my_db.users WHERE my_db.users.email = ?",
+			[email],
+			function(error, results, fields) {
+				if (error) {
+					console.log(
+						"db query error while retriving user_id from email"
+					);
+					return;
+				}
+				console.log("query succeed...");
+				console.log("result:", results);
+				if (results.length != 1) {
+					console.log("no such email exists in db!");
+					res.status(404).send("no such email exists in db!");
+					return;
+				}
+				user_id = results[0].id;
+				console.log(user_id);
+				let mysql_todo = todo;
+				mysql_todo.user_id = user_id;
+				mysql_todo.datetime = datetime.toMysqlFormat();
+				//console.log(mysql_todo);
+				//var sql = mysql.format("INSERT INTO  my_db.todo SET ?", [mysql_todo]);
+				//console.log(sql);
+				connection.query(
+					"INSERT INTO my_db.todo SET ?",
+					[mysql_todo],
+					function(error, results, fields) {
+						if (error) {
+							console.log("db query error: select all todos");
+							res.status(507).send(
+								"db query error: select all todos"
+							);
+							return;
+						} else {
+							console.log("new todo insert successrul!");
+							res.status(200).json({});
+						}
+					}
+				);
+			}
+		);
+	} else {
+		setTimeout(() => res.send("ERROR: authentication!"), 10);
 	}
 });
 
