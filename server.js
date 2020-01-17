@@ -73,7 +73,7 @@ app.post("/todos", function(req, res) {
 		console.log("post /todos");
 		const user = req.body.user;
 		const email = req.body.user.email;
-		const date = req.body.date;
+		const date = new Date(req.body.date);
 		//console.log("user:", user);
 		//console.log("email:", email);
 		//console.log("date:", date);
@@ -100,25 +100,40 @@ app.post("/todos", function(req, res) {
 					res.status(404).send("no such email exists in db!");
 					return;
 				}
-				id = results[0].id;
-				console.log(id);
-				connection.query(
-					"SELECT * FROM my_db.todo WHERE my_db.todo.user_id = ?",
-					[id],
-					function(error, results, fields) {
-						if (error) {
-							console.log("db query error: select all todos");
-							res.status(507).send("db query error!");
-							return;
-						} else {
-							console.log(
-								"send back the todo list, count:",
-								results.length
-							);
-							res.json(results);
-						}
+				user_id = results[0].id;
+				console.log("user_id:", user_id);
+				console.log("date:", date);
+				let date_1 = new Date(date);
+				date_1.setHours(0);
+				date_1.setMinutes(0);
+				date_1.setSeconds(0);
+				date_1.setMilliseconds(0);
+				let date_2 = new Date(date_1);
+				date_2.setDate(date_2.getDate() + 1);
+				console.log("date:", date);
+				console.log("date_1:", date_1);
+				console.log("date_2:", date_2);
+				const pre_sql =
+					"SELECT * FROM my_db.todo WHERE my_db.todo.user_id = ? AND datetime >= ? AND datetime < ?";
+				const sql = mysql.format(pre_sql, [user_id, date_1, date_2]);
+				//console.log(sql);
+				connection.query(sql, [user_id], function(
+					error,
+					results,
+					fields
+				) {
+					if (error) {
+						console.log("db query error: select all todos");
+						res.status(507).send("db query error!");
+						return;
+					} else {
+						console.log(
+							"send back the todo list, count:",
+							results.length
+						);
+						res.json(results);
 					}
-				);
+				});
 			}
 		);
 	} else {

@@ -48,6 +48,7 @@ class MyDailyPlannerApp extends Component {
 			const content = await rawResponse.json();
 			console.log("content", content);
 			this.setState({
+				date: wantingDate,
 				todos: content,
 				fetching: false,
 				result: true
@@ -58,6 +59,7 @@ class MyDailyPlannerApp extends Component {
 				error.message
 			);
 			this.setState({
+				date: wantingDate,
 				fetching: false,
 				result: false
 			});
@@ -104,7 +106,7 @@ class MyDailyPlannerApp extends Component {
 	};
 
 	onDayShift(shift) {
-		let currentDate = this.state.date;
+		let currentDate = new Date(this.state.date);
 		if (shift === 0) currentDate = new Date();
 		else currentDate.setDate(currentDate.getDate() + shift);
 		this.getTodos(currentDate);
